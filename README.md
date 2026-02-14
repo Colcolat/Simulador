@@ -23,5 +23,3 @@ La gestión de memoria es un equilibrio entre velocidad de búsqueda y eficienci
 * Silberschatz, A., Galvin, P. B., & Gagne, G. (2018). *Operating System Concepts*. Wiley.
 * Tanenbaum, A. S., & Bos, H. (2014). *Modern Operating Systems*. Pearson.
 
-## f. Cláusula de uso de IA
-Se declara el uso de herramientas de **Inteligencia Artificial** para asistir en la estructuración de la lógica de los algoritmos en JavaScript, el diseño visual con CSS y la redacción de la presente documentación técnica.
