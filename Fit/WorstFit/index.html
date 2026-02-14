@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulación Worst Fit</title>
+  <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+  <header class="main-header">
+    <h1>Algoritmo Worst Fit</h1>
+  </header>
+
+  <main class="container">
+    <!-- Aquí va tu simulación Worst Fit -->
+   <div id="worstfit-app">
+  <section class="panel">
+    <h2>Simulación Worst Fit</h2>
+
+    <label>Memoria (bloques separados por coma):</label><br>
+    <input id="memWorst" value="100,200,300,400"><br><br>
+
+    <label>Procesos (tamaños separados por coma):</label><br>
+    <input id="procWorst" value="120,80,250,90"><br><br>
+
+    <button onclick="simulateWorstFit()">Simular Worst Fit</button>
+
+    <div id="worstMemory" class="memory"></div>
+    <div class="results" id="worstResults"></div>
+    <div id="worstTable"></div>
+  </section>
+</div>
+
+<script>
+  function simulateWorstFit() {
+    const memInput = document.getElementById("memWorst").value.split(",").map(Number);
+    const procInput = document.getElementById("procWorst").value.split(",").map(Number);
+
+    let memory = memInput.map(size => ({ size, free: size }));
+    let allocations = [];
+
+    procInput.forEach((p, idx) => {
+      let chosenIndex = -1;
+      let maxWaste = -1;
+      memory.forEach((block, i) => {
+        if (block.free >= p && (block.free - p) > maxWaste) {
+          maxWaste = block.free - p;
+          chosenIndex = i;
+        }
+      });
+      if (chosenIndex !== -1) {
+        memory[chosenIndex].free -= p;
+        allocations.push({ process: p, block: chosenIndex });
+      } else {
+        allocations.push({ process: p, block: null });
+      }
+    });
+
+    renderWorstMemory(memory, allocations);
+    renderWorstTable(allocations);
+  }
+
+  function renderWorstMemory(memory, allocations) {
+    const container = document.getElementById("worstMemory");
+    container.innerHTML = "";
+    memory.forEach((block, i) => {
+      const div = document.createElement("div");
+      div.className = "block " + (block.free < block.size ? "used" : "free");
+      div.textContent = `Bloque ${i+1}: ${block.size - block.free}/${block.size} usado, ${block.free} libre`;
+      container.appendChild(div);
+    });
+
+    let frag = memory.reduce((acc, b) => acc + b.free, 0);
+    const results = document.getElementById("worstResults");
+    results.innerHTML = `<strong>Fragmentación total:</strong> ${frag}`;
+  }
+
+  function renderWorstTable(allocations) {
+    const tableDiv = document.getElementById("worstTable");
+    let html = "<table class='sim-table'><tr><th>Proceso</th><th>Bloque asignado</th></tr>";
+    allocations.forEach((a, idx) => {
+      html += `<tr>
+        <td>P${idx+1} (${a.process})</td>
+        <td>${a.block !== null ? "Bloque " + (a.block+1) : "No asignado"}</td>
+      </tr>`;
+    });
+    html += "</table>";
+    tableDiv.innerHTML = html;
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <p><a href="../../index.html">Volver al menú principal</a></p>
+  </footer>
+</body>
+</html>
